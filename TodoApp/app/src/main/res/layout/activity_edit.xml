@@ -23,6 +23,7 @@
         android:layout_height="wrap_content"
         android:text="@string/update_item_button_text"
         android:id="@+id/button"
+        android:onClick="onEditItem"
         android:layout_below="@+id/editText"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="70dp" />

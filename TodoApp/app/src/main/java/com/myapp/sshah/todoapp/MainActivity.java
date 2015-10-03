@@ -1,5 +1,6 @@
 package com.myapp.sshah.todoapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -20,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<String> items;
     ArrayAdapter<String> itemsAdapter;
     EditText etEditText;
+    private final int REQUEST_CODE = 20;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +34,15 @@ public class MainActivity extends AppCompatActivity {
         setupListViewListener();
     }
 
+
     private void setupListViewListener(){
+        lvItems.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                launchEditView(position);
+            }
+        });
+
         lvItems.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
@@ -42,6 +52,26 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
+    }
+
+    private void launchEditView(int index){
+        Intent i  = new Intent(MainActivity.this, EditActivity.class);
+        i.putExtra("index", index);
+        startActivityForResult(i, REQUEST_CODE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // REQUEST_CODE is defined above
+        if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
+            // Extract name value from result extras
+            String newText = data.getExtras().getString("updated_todo");
+            int index = data.getExtras().getInt("index", 0);
+            // Toast the name to display temporarily on screen
+            items.set(index, newText);
+            itemsAdapter.notifyDataSetChanged();
+            writeItems();
+        }
     }
 
     private void readItems(){
