@@ -50,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
         try{
             items = new ArrayList<String>(FileUtils.readLines(file));
         }catch (IOException ex){
+            items = new ArrayList<String>();
         }
     }
 
